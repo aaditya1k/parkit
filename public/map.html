@@ -1,0 +1,147 @@
+<link rel="stylesheet" href="./css/font-awesome.min.css"/>
+<style>
+.gen-map {
+    border: 1px solid #333;
+    float: left;
+}
+
+.gen-m-cols {
+    width: 17px;
+    height: 20px;
+    border: 1px solid #333;
+    float: left;
+    margin: 3px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.gen-m-cols .fa {
+    line-height: 22px;
+    font-size: 11px;
+    z-index:-1;
+}
+
+.gen-map:after, .gen-map .gen-m-rows:after {
+    display: table;
+    clear: both;
+    content: ' ';
+}
+.gen-m-cols.selected {
+    background: #333;
+    color: #fff;
+}
+</style>
+
+<div id="map" class="gen-map"></div>
+<div id="map2" class="gen-map"></div>
+<div id="map-tools"></div>
+<button id="getMap">Generate</button>
+
+<script src="/js/jquery-3.2.1.min.js"></script>
+<script>
+var map = {
+    tools: [
+        'fa-long-arrow-up',
+        'fa-long-arrow-down',
+        'fa-long-arrow-left',
+        'fa-long-arrow-right',
+        'fa-car',
+        'fa-motorcycle',
+        'fa-sign-in',
+        'fa-sign-out',
+        'fa-stop',
+        'fa-id-card-o',
+        '',
+    ],
+    selected: {
+        index: null,
+        icon: null
+    }
+};
+
+function generateTools() {
+    var toolshtml = '';
+    for (var i = 0; i < map.tools.length; i++) {
+        if (i === 0) {
+            map.selected.index = '0';
+            map.selected.icon = map.tools[i];
+        }
+        toolshtml += '<div class="gen-m-cols'+(i === 0 ? ' selected' : '')+'" data-index="'+i+'" data-icon="'+map.tools[i]+'"><i class="fa '+map.tools[i]+'" aria-hidden="true"></i></div>';
+    }
+    document.getElementById('map-tools').innerHTML = toolshtml;
+
+    $('#map-tools .gen-m-cols').click(function() {
+        var $this = $(this);
+        var selected = document.querySelector('#map-tools .gen-m-cols.selected');
+        if (selected) {
+            selected.classList.remove('selected');
+        }
+        $this.addClass('selected');
+        map.selected.index = $this.data('index');
+        map.selected.icon = $this.data('icon');
+    });
+
+    $('#getMap').click(function() {
+        var mapindex = [];
+        var rows = document.querySelectorAll('.gen-m-rows').length;
+        var $cols = $('.gen-m-rows .gen-m-cols');
+        $cols.each(function() {
+            var i = $(this).data('index');
+            mapindex.push(i);
+        });
+        console.log(JSON.stringify({
+            rows: rows,
+            cols: $cols.length / rows,
+            map: mapindex
+        }));
+    });
+}
+
+function generateBlocks(dom, rows, cols, mapIndexs) {
+    var html = '';
+    var totalI = 0;
+    var canFill = (typeof mapIndexs != 'undefined');
+    for (var i = 0; i < rows; i++) {
+        html += '<div class="gen-m-rows">';
+        for (var j = 0; j < cols; j++) {
+            html += '<div class="gen-m-cols"'+(canFill && mapIndexs[totalI] != null ? ' data-index="'+mapIndexs[totalI]+'"' : '')+'>';
+
+            if (canFill && mapIndexs[totalI] != null) {
+                html += '<i class="fa '+map.tools[ mapIndexs[totalI] ]+'" aria-hidden="true"></i>';
+            }
+
+            html += '</div>';
+            ++totalI;
+        }
+        html += '</div>';
+    }
+    dom.innerHTML = html;
+
+    $('.gen-m-rows .gen-m-cols').click(function() {
+        var $this = $(this);
+        $this.attr('data-index', map.selected.index);
+        $this.html('<i class="fa '+map.selected.icon+'" aria-hidden="true"></i>');
+    });
+}
+
+function generateBlocksFromMap(dom, mapObj) {
+    generateBlocks(
+        dom,
+        mapObj.rows,
+        mapObj.cols,
+        mapObj.map
+    );
+}
+
+generateTools();
+generateBlocks(
+    document.getElementById('map'),
+    5,
+    5
+);
+
+generateBlocksFromMap(
+    document.getElementById('map2'),
+    JSON.parse('{"rows":15,"cols":30,"map":[null,"9","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","1","9",null,null,null,null,"3","10",null,null,null,null,null,null,null,null,null,"3",null,null,null,null,null,null,"3",null,"10","10","10",null,null,null,"0","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4",null,null,"4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","1","1",null,null,"3",null,null,null,null,null,null,null,null,"3",null,null,null,null,"3",null,null,null,null,"3",null,null,null,null,"3",null,null,null,"4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4",null,null,"4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","1","1","1",null,"2",null,null,"2",null,null,null,null,"2",null,null,"2",null,null,"2",null,null,null,null,"2",null,null,null,null,null,null,"2","3",null,"4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","8","10","8","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","8","1","8","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","8",null,"8","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","8","1","8","8","8","8","8","8","8","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","8","10","3",null,null,"3",null,null,"8","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","5","8","8","8","8","8","8","8","8","8","8","8","8","8","8","8","8","8","8","8","8","8","8","8","8","8","8","8","8","8","8"]}')
+);
+</script>
