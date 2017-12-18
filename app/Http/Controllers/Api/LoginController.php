@@ -37,7 +37,7 @@ class LoginController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function verify(Request $request, TfaCodeService $tfaCodeService)
+    public function verify(Request $request, UserService $userService, TfaCodeService $tfaCodeService)
     {
         if ($request->mobile == null || strlen($request->mobile) < self::MOBILE_LENGTH) {
             return response()->json([
@@ -57,6 +57,10 @@ class LoginController extends Controller
         if ($user) {
             $verified = $tfaCodeService->verify($user->id, $request->code);
             if ($verified) {
+                if ($user->is_active == 0) {
+                    // This is user's first time, activate him.
+                    $userService->activateUser($user);
+                }
                 try {
                     $token = JWTAuth::fromUser($user, []);
                     return response()->json(['success' => true, 'token' => $token]);

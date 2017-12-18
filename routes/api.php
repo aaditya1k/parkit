@@ -13,9 +13,15 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::get('/', function() {
+    return response()->json([
+        'success' => 1,
+        'message' => 'API working..'
+    ]);
+});
+
 Route::post('/login', 'LoginController@login');
 Route::post('/verify', 'LoginController@verify');
-
 Route::post('/refresh', 'LoginController@refresh');
 
 Route::group(['middleware' => 'jwt.auth', 'prefix' => 'v1'], function () {
