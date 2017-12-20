@@ -15,6 +15,9 @@ Route::get('/', function () {
     return "Nothing to check here..";
 });
 
+Route::get('demo/entry/{id}/{vehicleType}', 'DemoController@entry');
+Route::get('demo/exit/{id}/{vehicleType}/{secretKey}', 'DemoController@exit');
+
 Route::group(['prefix' => 'admin', 'as' => 'admin:', 'namespace' => 'Admin'], function () {
     Route::get('login', 'LoginController@showLoginForm')->name('login');
     Route::post('login', 'LoginController@login')->name('login:post');

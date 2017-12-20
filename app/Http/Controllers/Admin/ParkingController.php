@@ -9,6 +9,7 @@ use App\Parking;
 use App\ParkingLevel;
 use Lang;
 use App\Services\ParkingService;
+use PHPQRCode\QRcode;
 
 class ParkingController extends Controller
 {
@@ -42,7 +43,7 @@ class ParkingController extends Controller
         }
     }
 
-    public function index()
+    public function index(ParkingService $parkingService)
     {
         $parkings = Parking::orderBy('group_id', 'asc')->orderBy('label', 'asc')->paginate(20);
         return view('admin.parking.index', ['parkings' => $parkings]);
@@ -70,10 +71,13 @@ class ParkingController extends Controller
             return abort(404);
         }
 
+        $exitKey = str_random(40);
+
         $parking = Parking::create([
             'group_id' => $request->group_id,
             'label' => $request->label,
             'secret_key' => str_random(40),
+            'exit_generated_key' => $exitKey,
             'manual_parkno' => $request->manual_parkno == "1" ? "1" : "0",
             'bike_charge_method' => $request->bike_charge_method,
             'bike_charge_json' => json_encode($bikeChargeJson),
@@ -82,6 +86,23 @@ class ParkingController extends Controller
             'car_charge_json' => json_encode($carChargeJson),
             'car_charge_max' => $request->car_charge_max,
         ]);
+
+        $entryImage = $parking->id.'-ent-'.str_random(20);
+        $exitImage = $parking->id.'-ext-'.str_random(20);
+
+        $qrInfo = ['id' => $parking->id, 'vehicleType' => ParkingService::VEHICLE_TWO];
+        QRcode::png(json_encode($qrInfo), public_path($parkingService->getQrImage($entryImage, ParkingService::VEHICLE_TWO)), 'M', 8, 2);
+        $qrInfo = ['id' => $parking->id, 'vehicleType' => ParkingService::VEHICLE_FOUR];
+        QRcode::png(json_encode($qrInfo), public_path($parkingService->getQrImage($entryImage, ParkingService::VEHICLE_FOUR)), 'M', 8, 2);
+
+        $qrInfo = ['id' => $parking->id, 'vehicleType' => ParkingService::VEHICLE_TWO, 'exit_generated_key' => $exitKey];
+        QRcode::png(json_encode($qrInfo), public_path($parkingService->getQrImage($exitImage, ParkingService::VEHICLE_TWO)), 'M', 8, 2);
+        $qrInfo = ['id' => $parking->id, 'vehicleType' => ParkingService::VEHICLE_FOUR, 'exit_generated_key' => $exitKey];
+        QRcode::png(json_encode($qrInfo), public_path($parkingService->getQrImage($exitImage, ParkingService::VEHICLE_FOUR)), 'M', 8, 2);
+
+        $parking->entry_image = $entryImage;
+        $parking->exit_image = $exitImage;
+        $parking->save();
 
         return redirect()->route('admin:parking:edit', $parking->id)->with('success', Lang::get('admin.created'));
     }

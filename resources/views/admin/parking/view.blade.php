@@ -18,8 +18,18 @@
     </div>
 
     <div class="view">
+        <div class="label">Random Parking</div>
+        <div class="input">{{ $parking->manual_parkno == "1" ? 'Yes' : 'No' }}</div>
+    </div>
+
+    <div class="view">
         <div class="label">Secret Key</div>
         <div class="input"><span class="show-value" data-value="{{ $parking->secret_key }}"></span></div>
+    </div>
+
+    <div class="view">
+        <div class="label">Exit Secret Key</div>
+        <div class="input"><span class="show-value" data-value="{{ $parking->exit_generated_key }}"></span></div>
     </div>
 
     <div class="view">
@@ -61,6 +71,16 @@
                 <div class="label">Charge 24hr. Max &#8377;</div>
                 <div class="input">{{ $parking->bike_charge_max }}</div>
             </div>
+
+            <div class="view">
+                <div class="label">Entry Qr Code</div>
+                <div class="input"><img src="{{ asset($parkingService->getQrImage($parking->entry_image, $parkingService::VEHICLE_TWO)) }}"/></div>
+            </div>
+
+            <div class="view">
+                <div class="label">Exit Qr Code</div>
+                <div class="input"><img src="{{ asset($parkingService->getQrImage($parking->exit_image, $parkingService::VEHICLE_TWO)) }}"/></div>
+            </div>
         </div>
 
         <div class="width50 left">
@@ -88,6 +108,16 @@
             <div class="view">
                 <div class="label">Charge 24hr. Max &#8377;</div>
                 <div class="input">{{ $parking->car_charge_max }}</div>
+            </div>
+
+            <div class="view">
+                <div class="label">Entry Qr Code</div>
+                <div class="input"><img src="{{ asset($parkingService->getQrImage($parking->entry_image, $parkingService::VEHICLE_FOUR)) }}"/></div>
+            </div>
+
+            <div class="view">
+                <div class="label">Exit Qr Code</div>
+                <div class="input"><img src="{{ asset($parkingService->getQrImage($parking->exit_image, $parkingService::VEHICLE_FOUR)) }}"/></div>
             </div>
         </div>
     </div>

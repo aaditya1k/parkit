@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\DeleteTfaCode::class
+        Commands\DeleteTfaCode::class,
+        Commands\RegenerateParkingKey::class,
     ];
 
     /**
@@ -27,6 +28,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')
         //          ->hourly();
         $schedule->command('delete:tfacodes')->everyTenMinutes();
+        $schedule->command('regenerate:parking-key')->hourly();
     }
 
     /**

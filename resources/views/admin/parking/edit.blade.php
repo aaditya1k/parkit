@@ -30,7 +30,7 @@
         </div>
 
         <div class="form">
-            <div class="label">Manual Parking numbers</div>
+            <div class="label">Random Parking</div>
             <div class="input">
                 {!! Form::checkbox('manual_parkno', '1', $parking->manual_parkno == "1" ? true : false) !!}
             </div>

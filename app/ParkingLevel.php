@@ -14,8 +14,7 @@ class ParkingLevel extends Model
         'parking_id',
         'grid_row',
         'grid_col',
-        'grid_map',
-        'generated_map'
+        'grid_map'
     ];
 
     public function parkingLevelId()

@@ -6,10 +6,12 @@
     "type": "project",
     "require": {
         "php": ">=5.6.4",
+        "aferrandini/phpqrcode": "^1.0",
         "doctrine/dbal": "^2.5",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.2.0",
+        "plivo/plivo-php": "^1.1",
         "tymon/jwt-auth": "^0.5.12"
     },
     "require-dev": {

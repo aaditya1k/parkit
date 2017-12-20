@@ -3,6 +3,12 @@
 @section('content')
     <h2 class="head">{{ $group->name }}</h2>
 
+    <div class="view">
+        <div class="label">Balance</div>
+        <div class="input">{{ $group->balance }} &#8377;</div>
+    </div>
+
+    <h2 class="head">Parkings</h2>
     <?php
         $parkings = $group->parkings;
     ?>

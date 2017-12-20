@@ -10,6 +10,7 @@
             <tr>
                 <th>ID</th>
                 <th>Name</th>
+                <th>Balance &#8377;</th>
                 <th>Created</th>
                 <th>Updated</th>
                 <th></th>
@@ -20,6 +21,7 @@
             <tr>
                 <td>{{ $group->id }}</td>
                 <td>{{ $group->name }}</td>
+                <td>{{ $group->balance }} &#8377;</td>
                 <td>{{ $group->createdAt() }}</td>
                 <td>{{ $group->updatedAt() }}</td>
                 <td class="option">

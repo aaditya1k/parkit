@@ -11,7 +11,8 @@ class Group extends Model
 
     protected $fillable = [
         'name',
-        'api_key'
+        'api_key',
+        'balance'
     ];
 
     public function parkings()

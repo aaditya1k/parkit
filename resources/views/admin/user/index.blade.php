@@ -7,6 +7,7 @@
                 <th>ID</th>
                 <th>Mobile</th>
                 <th>Name</th>
+                <th>Balance &#8377;</th>
                 <th>Is Active?</th>
                 <th>Is Admin?</th>
                 <th>Joined</th>
@@ -19,6 +20,7 @@
                 <td>{{ $user->id }}</td>
                 <td><span class="show-value" data-value="{{ $user->mobile }}"></span></td>
                 <td>{{ $user->name }}</td>
+                <td>{{ $user->balance }} &#8377;</td>
                 <td>{!! $user->is_active ? 'Yes' : '<span class="no">No</span>' !!}</td>
                 <td>{!! $user->is_admin ? 'Yes' : '<span class="no">No</span>' !!}</td>
                 <td>{{ $user->createdAt() }}</td>

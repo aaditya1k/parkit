@@ -13,7 +13,10 @@ class Parking extends Model
         'group_id',
         'label',
         'secret_key',
+        'exit_generated_key',
         'manual_parkno',
+        'entry_image',
+        'exit_image',
         'bike_charge_method',
         'bike_charge_json',
         'bike_charge_max',
@@ -24,6 +27,7 @@ class Parking extends Model
 
     protected $hidden = [
         'secret_key',
+        'exit_generated_key'
     ];
 
     public function parkingId()

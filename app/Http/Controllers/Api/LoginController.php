@@ -11,16 +11,21 @@ use Illuminate\Support\Facades\Route;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
+use Plivo\RestAPI;
+
 class LoginController extends Controller
 {
     const MOBILE_LENGTH = 10;
 
+    /**
+     * Send OTP token to a mobile no.
+     */
     public function login(
         Request $request,
         UserService $userService,
         TfaCodeService $tfaCodeService
     ) {
-        if ($request->mobile == null || strlen($request->mobile) < self::MOBILE_LENGTH) {
+        if (!$this->validMobileNo($request->mobile)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Enter a valid mobile number.'
@@ -32,14 +37,25 @@ class LoginController extends Controller
             $user = $userService->registerUser($request->mobile);
         }
 
-        $tfaCodeService->new($user->id);
+        $code = $tfaCodeService->new($user->id);
+
+        // $plivo = new RestAPI(env('PLIVO_AUTH_ID'), env('PLIVO_AUTH_TOKEN'));
+        // $plivo->send_message([
+        //     'src' => '+' . env('PLIVO_NO'), // Sender's phone number with country code
+        //     'dst' => '+91' . $request->mobile, // Receiver's phone number with country code
+        //     'text' => 'Your OTP code is ' . $code->code,
+        //     'method' => 'POST'
+        // ]);
 
         return response()->json(['success' => true]);
     }
 
+    /**
+     * Verify mobile no. and OTP of a user.
+     */
     public function verify(Request $request, UserService $userService, TfaCodeService $tfaCodeService)
     {
-        if ($request->mobile == null || strlen($request->mobile) < self::MOBILE_LENGTH) {
+        if (!$this->validMobileNo($request->mobile)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Enter a valid mobile number.'
@@ -70,6 +86,11 @@ class LoginController extends Controller
                         'message' => 'Something went wrong. Please try again.'
                     ], 400);
                 }
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Code is not valid.'
+                ], 400);
             }
         }
 
@@ -79,13 +100,33 @@ class LoginController extends Controller
         ], 400);
     }
 
+    /**
+     * Refresh JWT token.
+     */
     public function refresh(Request $request)
     {
         try {
             $newToken = JWTAuth::refresh($request->token);
-            echo $newToken;
+            return response()->json([
+                'success' => true,
+                'new_token' => $newToken
+            ]);
         } catch (\Exception $e) {
-            echo $e->getMessage();
+            return response()->json([
+                'success' => false,
+                'new_token' => $e->getMessage()
+            ]);
         }
+    }
+
+    /**
+     * Validate mobile number.
+     * @param $mobile integer|length:10
+     */
+    private function validMobileNo($mobile)
+    {
+        return ($mobile == null || strlen($mobile) != self::MOBILE_LENGTH || !ctype_digit($mobile))
+            ? false
+            : true;
     }
 }

@@ -22,6 +22,11 @@
     </div>
 
     <div class="view">
+        <div class="label">Balance &#8377;</div>
+        <div class="input">{{ $user->balance }} &#8377;</div>
+    </div>
+
+    <div class="view">
         <div class="label">Joined</div>
         <div class="input">{{ $user->createdAt() }}</div>
     </div>
