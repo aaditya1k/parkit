@@ -16,9 +16,12 @@ class BalanceService
     public function addBalance($amount, $userId, $method)
     {
         User::where('id', $userId)->increment('balance', $amount);
-        $this->activityService->createActivity('balance-add', $userId, $amount, [
-            'method' => $method
-        ]);
+        $this->activityService->create(
+            ActivityService::ACTIVITY_BALANCE_ADD,
+            $userId,
+            $amount,
+            ['method' => $method]
+        );
         return true;
     }
 }

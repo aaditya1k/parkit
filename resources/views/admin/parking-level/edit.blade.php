@@ -63,7 +63,7 @@
 @section('header')
     <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}"/>
     <script src="{{ asset('js/jquery-3.2.1.min.js') }}"></script>
-@show
+@stop
 
 @section('footer')
     <script>
@@ -71,4 +71,4 @@
             document.getElementById("grid-input").dispatchEvent(new Event('change'));
         });
     </script>
-@show
+@stop

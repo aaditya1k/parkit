@@ -13,9 +13,11 @@ class CreateParked extends Migration
      */
     public function up()
     {
-        Schema::create('parked', function(Blueprint $table) {
+        Schema::create('parked', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('parking_id')->unsigned();
+            $table->integer('parking_level_id')->unsigned();
+            $table->integer('user_id')->unsigned();
             $table->integer('group_id')->unsigned();
             $table->integer('position')->nullable();
             $table->tinyInteger('vehicle_type');

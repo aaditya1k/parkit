@@ -17,7 +17,7 @@ class Admin
     public function handle($request, Closure $next)
     {
         if (!Auth::check()) {
-            return redirect()->route('admin:login');
+            return redirect()->route('admin:login:get');
         }
 
         if (!Auth::user()->is_admin) {

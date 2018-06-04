@@ -26,6 +26,7 @@
                 <td>{{ $parking->updatedAt() }}</td>
                 <td class="option">
                     <a href="{{ route('admin:parking:view', $parking->id) }}">View</a>
+                    <a href="{{ route('admin:parking:live-view', $parking->id) }}">Live View</a>
                     <a href="{{ route('admin:parking:edit', $parking->id) }}">Edit</a>
                     <a href="{{ route('admin:parking-level:new', $parking->id) }}">Create Level</a>
                 </td>

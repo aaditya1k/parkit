@@ -39,13 +39,15 @@ class LoginController extends Controller
 
         $code = $tfaCodeService->new($user->id);
 
-        // $plivo = new RestAPI(env('PLIVO_AUTH_ID'), env('PLIVO_AUTH_TOKEN'));
-        // $plivo->send_message([
-        //     'src' => '+' . env('PLIVO_NO'), // Sender's phone number with country code
-        //     'dst' => '+91' . $request->mobile, // Receiver's phone number with country code
-        //     'text' => 'Your OTP code is ' . $code->code,
-        //     'method' => 'POST'
-        // ]);
+        if (env('PLIVO_ENABLED') == "1") {
+            $plivo = new RestAPI(env('PLIVO_AUTH_ID'), env('PLIVO_AUTH_TOKEN'));
+            $plivo->send_message([
+                'src' => '+' . env('PLIVO_NO'), // Sender's phone number with country code
+                'dst' => '+91' . $request->mobile, // Receiver's phone number with country code
+                'text' => 'Your OTP code is ' . $code->code,
+                'method' => 'POST'
+            ]);
+        }
 
         return response()->json(['success' => true]);
     }

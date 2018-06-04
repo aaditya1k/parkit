@@ -24,12 +24,14 @@
 
     <div class="cf">
     <div class="gen-map gen-map-view">
-    <?php echo ($parkingService->generateMap(
+    <?php
+        $generateMap = $parkingService->generateMap(
             $parkingLevel->grid_row,
             $parkingLevel->grid_col,
             json_decode($parkingLevel->grid_map)
-        ));
+        );
     ?>
+    {!! $generateMap['html'] !!}
     </div>
     </div>
 
@@ -46,4 +48,4 @@
 
 @section('header')
     <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}"/>
-@show
+@stop

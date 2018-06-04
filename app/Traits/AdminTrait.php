@@ -1,6 +1,6 @@
 <?php
-
 namespace App\Traits;
+
 use Validator;
 
 trait AdminTrait
@@ -8,14 +8,9 @@ trait AdminTrait
     private function valid($request)
     {
         $validator = Validator::make($request->all(), $this->rules);
-
-        if ($validator->fails())
-        {
-            $this->throwValidationException(
-                $request, $validator
-            );
+        if ($validator->fails()) {
+            $this->throwValidationException($request, $validator);
         }
-
         return true;
     }
 

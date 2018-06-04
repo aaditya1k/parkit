@@ -61,7 +61,7 @@
                 <div class="label">Charge Between &#8377;</div>
                 @foreach($parking->bike_charge_json as $cat)
                     <div class="input">
-                        {{ $cat->min }} - &#8377; {{ $cat->charge }}
+                        {{ $cat->min }} hour - &#8377; {{ $cat->charge }}
                     </div>
                 @endforeach
             </div>

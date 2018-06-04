@@ -35,4 +35,24 @@
         <div class="label">Last updated</div>
         <div class="input">{{ $user->updatedAt() }}</div>
     </div>
+
+    <h2 class="head">Activity</h2>
+    <table class="data">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Data 1</th>
+                <th>Data 2</th>
+                <th>Created</th>
+            </tr>
+        </thead>
+    @foreach ($user->activity as $activity)
+        <tr>
+            <td>{{ $activity->type }}</td>
+            <td>{{ $activity->data1 }}</td>
+            <td>{{ $activity->data2 }}</td>
+            <td>{{ $activity->created_at }}</td>
+        </tr>
+    @endforeach
+    </table>
 @stop

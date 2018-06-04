@@ -8,7 +8,6 @@ use App\Parking;
 use App\Services\HelperService;
 use App\Services\ParkingService;
 
-
 class ParkingController extends Controller
 {
     /**

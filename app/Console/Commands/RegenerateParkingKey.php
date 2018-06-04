@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Parking;
-use PHPQRCode\QRcode;
 use App\Services\ParkingService;
 
 class RegenerateParkingKey extends Command
@@ -48,23 +47,11 @@ class RegenerateParkingKey extends Command
             $currentEntryImg = $parking->entry_image;
             $currentExitImg = $parking->exit_image;
 
-            $entryImage = $parking->id.'-ent-'.str_random(20);
-            $exitImage = $parking->id.'-ext-'.str_random(20);
-            $exitKey = str_random(40);
+            $entryExitQRCodes = $this->parkingService->generateEntryExitQRCodes($parking->id);
 
-            $qrInfo = ['id' => $parking->id, 'vehicleType' => ParkingService::VEHICLE_TWO];
-            QRcode::png(json_encode($qrInfo), public_path($this->parkingService->getQrImage($entryImage, ParkingService::VEHICLE_TWO)), 'M', 8, 2);
-            $qrInfo = ['id' => $parking->id, 'vehicleType' => ParkingService::VEHICLE_FOUR];
-            QRcode::png(json_encode($qrInfo), public_path($this->parkingService->getQrImage($entryImage, ParkingService::VEHICLE_FOUR)), 'M', 8, 2);
-
-            $qrInfo = ['id' => $parking->id, 'vehicleType' => ParkingService::VEHICLE_TWO, 'exit_generated_key' => $exitKey];
-            QRcode::png(json_encode($qrInfo), public_path($this->parkingService->getQrImage($exitImage, ParkingService::VEHICLE_TWO)), 'M', 8, 2);
-            $qrInfo = ['id' => $parking->id, 'vehicleType' => ParkingService::VEHICLE_FOUR, 'exit_generated_key' => $exitKey];
-            QRcode::png(json_encode($qrInfo), public_path($this->parkingService->getQrImage($exitImage, ParkingService::VEHICLE_FOUR)), 'M', 8, 2);
-
-            $parking->entry_image = $entryImage;
-            $parking->exit_image = $exitImage;
-            $parking->exit_generated_key = $exitKey;
+            $parking->entry_image = $entryExitQRCodes['entryImage'];
+            $parking->exit_image = $entryExitQRCodes['exitImage'];
+            $parking->exit_generated_key = $entryExitQRCodes['exitGeneratedKey'];
             $parking->save();
 
             @unlink(public_path($this->parkingService->getQrImage($currentEntryImg, ParkingService::VEHICLE_TWO)));

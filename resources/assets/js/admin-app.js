@@ -138,17 +138,6 @@ function gridGenerator() {
         mapindex.push(i.getAttribute("data-index"));
       }
     });
-
-    // let $cols = $('#' + domId + ' .gen-m-rows .gen-m-cols');
-    // $cols.each(function() {
-    //   console.log($(this).data("index"));
-    //   if ($(this).data("index") == "10") {
-    //     // console.log('asd');
-    //     mapindex.push(null);
-    //   } else {
-    //     mapindex.push( $(this).data("index") );
-    //   }
-    // });
     return {
       rows: rows,
       cols: cols.length / rows,

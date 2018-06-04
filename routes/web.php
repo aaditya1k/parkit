@@ -11,23 +11,34 @@
 |
 */
 
+/**
+ * Web routes below this.
+ */
+
 Route::get('/', function () {
-    return "Nothing to check here..";
+    return "Everything up & running.. 🏃‍";
+})->name('demo:index');
+
+Route::group(['prefix' => 'demo', 'as' => 'demo:'], function () {
+    Route::get('entry/{id}/{vehicleType}', 'DemoController@entry')->name('entry');
+    Route::get('exit/{id}/{vehicleType}/{secretKey}', 'DemoController@exit')->name('exit');
+    Route::get('routes', 'DemoController@routes')->name('routes');
 });
 
-Route::get('demo/entry/{id}/{vehicleType}', 'DemoController@entry');
-Route::get('demo/exit/{id}/{vehicleType}/{secretKey}', 'DemoController@exit');
+/**
+ * Admin routes below this.
+ */
 
 Route::group(['prefix' => 'admin', 'as' => 'admin:', 'namespace' => 'Admin'], function () {
-    Route::get('login', 'LoginController@showLoginForm')->name('login');
+    Route::get('login', 'LoginController@showLoginForm')->name('login:get');
     Route::post('login', 'LoginController@login')->name('login:post');
-    Route::post('logout', 'LoginController@logout')->name('logout');
+    Route::post('logout', 'LoginController@logout')->name('login:logout');
 });
 
 Route::group(['middleware' => 'admin', 'prefix' => 'admin', 'as' => 'admin:', 'namespace' => 'Admin'], function () {
-    Route::get('/', 'HomeController@index')->name('dashboard');
+    Route::get('/', 'DashboardController@index')->name('dashboard');
 
-    Route::group(['prefix' => 'group', 'as' => 'group:'], function() {
+    Route::group(['prefix' => 'group', 'as' => 'group:'], function () {
         Route::get('/', 'GroupController@index')->name('index');
         Route::get('new', 'GroupController@new')->name('new');
         Route::post('create', 'GroupController@create')->name('create');
@@ -36,16 +47,17 @@ Route::group(['middleware' => 'admin', 'prefix' => 'admin', 'as' => 'admin:', 'n
         Route::post('update/{id}', 'GroupController@update')->name('update');
     });
 
-    Route::group(['prefix' => 'parking', 'as' => 'parking:'], function() {
+    Route::group(['prefix' => 'parking', 'as' => 'parking:'], function () {
         Route::get('/', 'ParkingController@index')->name('index');
         Route::get('new', 'ParkingController@new')->name('new');
         Route::post('create', 'ParkingController@create')->name('create');
         Route::get('view/{id}', 'ParkingController@view')->name('view');
         Route::get('edit/{id}', 'ParkingController@edit')->name('edit');
         Route::post('update/{id}', 'ParkingController@update')->name('update');
+        Route::get('live-view/{id}', 'ParkingController@liveView')->name('live-view');
     });
 
-    Route::group(['prefix' => 'parking-level', 'as' => 'parking-level:'], function() {
+    Route::group(['prefix' => 'parking-level', 'as' => 'parking-level:'], function () {
         Route::get('/', 'ParkingLevelController@index')->name('index');
         Route::get('new/{parkingId}', 'ParkingLevelController@new')->name('new');
         Route::post('create/{parkingId}', 'ParkingLevelController@create')->name('create');
@@ -54,7 +66,7 @@ Route::group(['middleware' => 'admin', 'prefix' => 'admin', 'as' => 'admin:', 'n
         Route::post('update/{id}', 'ParkingLevelController@update')->name('update');
     });
 
-    Route::group(['prefix' => 'user', 'as' => 'user:'], function() {
+    Route::group(['prefix' => 'user', 'as' => 'user:'], function () {
         Route::get('/', 'UserController@index')->name('index');
         Route::get('view/{id}', 'UserController@view')->name('view');
         Route::get('edit/{id}', 'UserController@edit')->name('edit');

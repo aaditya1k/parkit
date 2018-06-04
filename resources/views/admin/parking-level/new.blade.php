@@ -56,4 +56,4 @@
 @section('header')
     <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}"/>
     <script src="{{ asset('js/jquery-3.2.1.min.js') }}"></script>
-@show
+@stop

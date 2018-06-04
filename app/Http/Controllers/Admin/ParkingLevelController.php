@@ -56,7 +56,8 @@ class ParkingLevelController extends Controller
             'generated_map' => null
         ]);
 
-        return redirect()->route('admin:parking-level:edit', $parkingLevel->id)->with('success', Lang::get('admin.created'));
+        return redirect()->route('admin:parking-level:edit', $parkingLevel->id)
+            ->with('success', Lang::get('admin.created'));
     }
 
     public function view($id)
@@ -93,6 +94,7 @@ class ParkingLevelController extends Controller
         $parkingLevel->grid_map = json_encode($grid->map);
         $parkingLevel->save();
 
-        return redirect()->route('admin:parking-level:edit', $parkingLevel->id)->with('success', Lang::get('admin.updated'));
+        return redirect()->route('admin:parking-level:edit', $parkingLevel->id)
+            ->with('success', Lang::get('admin.updated'));
     }
 }

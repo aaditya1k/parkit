@@ -54,4 +54,11 @@ class Parking extends Model
     {
         return $this->hasMany('\App\ParkingLevel');
     }
+
+    public function parkedList()
+    {
+        return $this->hasMany('\App\Parked')
+            ->select('position', 'vehicle_type')
+            ->where('exited_at', null);
+    }
 }

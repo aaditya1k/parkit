@@ -3,7 +3,7 @@
 @section('content')
 @include('admin.partials.status')
 
-{!! Form::open(['url' => route('admin:login')]) !!}
+{!! Form::open(['url' => route('admin:login:get')]) !!}
     <div class="form">
         <div class="label">Mobile No.</div>
         <div class="input">{!! Form::text('mobile', old('mobile'), ['required']) !!}</div>

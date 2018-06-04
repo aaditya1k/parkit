@@ -12,6 +12,7 @@ use App\Services\ParkingService;
 class DemoController extends Controller
 {
     private $parkingService;
+
     public function __construct(ParkingService $parkingService)
     {
         $this->parkingService = $parkingService;
@@ -43,6 +44,7 @@ class DemoController extends Controller
             'image' => $this->parkingService->getQrImage($parking->entry_image, $vehicleType),
         ]);
     }
+
     /**
      * Demo exit qr code screen.
      */
@@ -70,6 +72,39 @@ class DemoController extends Controller
             'vehicleType' => $vehicleType,
             'type' => 'Exit',
             'image' => $this->parkingService->getQrImage($parking->exit_image, $vehicleType),
+        ]);
+    }
+
+    /**
+     * Routes
+     */
+    public function routes()
+    {
+        $routes = \Route::getRoutes();
+        $categorize = [];
+        foreach ($routes as $route) {
+            $splitAs = explode(':', $route->action['as']);
+            $splitLen = count($splitAs);
+            if ($splitLen > 1) {
+                if (isset($categorize[ $splitAs[0] ])) {
+                    if (isset($categorize[ $splitAs[0] ]) && isset($categorize[ $splitAs[0] ][ $splitAs[1] ])) {
+                        $categorize[ $splitAs[0] ][ $splitAs[1] ][] = $route;
+                    } else {
+                        $categorize[ $splitAs[0] ][ $splitAs[1] ] = [$route];
+                    }
+                } else {
+                    $categorize[ $splitAs[0] ][ $splitAs[1] ] = [$route];
+                }
+            } elseif ($splitLen === 1 || $splitLen === 2) {
+                if (isset($categorize[ $splitAs[0] ])) {
+                    $categorize[ $splitAs[0] ][] = $route;
+                } else {
+                    $categorize[ $splitAs[0] ] = [$route];
+                }
+            }
+        }
+        return view('demo.routes', [
+            'categorize' => $categorize
         ]);
     }
 }

@@ -32,7 +32,8 @@ class GroupController extends Controller
         $this->valid($request);
 
         $group = Group::create([
-            'name' => $request->name
+            'name' => $request->name,
+            'balance' => 0
         ]);
 
         return redirect()->route('admin:group:edit', $group->id)->with('success', Lang::get('admin.created'));
