@@ -72,7 +72,7 @@ class ParkingController extends Controller
     public function entryQrCode(Request $request, ParkingService $parkingService)
     {
         $id = $request->id;
-        $vehicleType = $request->vehicle_type;
+        $vehicleType = $request->vehicleType;
         try {
             $parking = Parking::findOrFail($id);
             if ($vehicleType != ParkingService::VEHICLE_TWO && $vehicleType != ParkingService::VEHICLE_FOUR) {
@@ -99,8 +99,8 @@ class ParkingController extends Controller
     public function exitQrCode(Request $request, ParkingService $parkingService)
     {
         $id = $request->id;
-        $vehicleType = $request->vehicle_type;
-        $secretKey = $request->secret_key;
+        $vehicleType = $request->vehicleType;
+        $secretKey = $request->secretKey;
         try {
             $parking = Parking::findOrFail($id);
             if ($vehicleType != ParkingService::VEHICLE_TWO && $vehicleType != ParkingService::VEHICLE_FOUR) {

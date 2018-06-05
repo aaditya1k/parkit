@@ -167,6 +167,14 @@ class ParkingService
 
     public function getParkingPosition($vehicleType, Parking $parking)
     {
+        $levels = $parking->parkingLevels;
+        if (count($levels)  === 0) {
+            return [
+                'success' => false,
+                'message' => 'Parking is under construction'
+            ];
+        }
+
         if ($parking->manual_parkno == 1) {
             $parked = Parked::create([
                 'parking_id' => $parking->id,
@@ -186,14 +194,6 @@ class ParkingService
                 'success' => true,
                 'parked' => $parked,
                 'manual_parkno' => 1
-            ];
-        }
-
-        $levels = $parking->parkingLevels;
-        if (count($levels) === 0) {
-            return [
-                'status' => false,
-                'message' => 'Parking is under construction'
             ];
         }
 
@@ -271,7 +271,7 @@ class ParkingService
         if (!$parked) {
             return [
                 'success' => false,
-                'message' => 'Check with support on spot.'
+                'message' => 'Already exited with this ticket.'
             ];
         }
         $hours = Carbon::now()->diffInHours($parked->created_at) + 1;
@@ -284,7 +284,7 @@ class ParkingService
             );
             $charge = $calculateCharge['charge'];
         } else {
-            $charge = $this->calculateCharge(
+            $calculateCharge = $this->calculateCharge(
                 $hours,
                 $parking->car_charge_method,
                 $parking->car_charge_json,
@@ -311,13 +311,14 @@ class ParkingService
             DB::rollback();
             return [
                 'success' => false,
-                'message' => 'Already exited with this ticket'
+                'message' => 'Already exited with this ticket.'
             ];
         } elseif (!$deductBalance) {
             DB::rollback();
             return [
                 'success' => false,
-                'message' => 'Insufficient funds'
+                'message' => 'Insufficient funds',
+                'charge_log' => $calculateCharge
             ];
         }
 
@@ -355,9 +356,9 @@ class ParkingService
         } else {
             $found = false;
             foreach ($chargeJson as $cat) {
-                if ($hours < $cat->min) {
+                if ($hours <= $cat->min) {
                     $found = true;
-                    $totalCharge = $hours * $cat->charge;
+                    $totalCharge = $cat->charge;
                     $totalCharge += $days * $dayMaxCharge;
                 }
             }

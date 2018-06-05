@@ -43,8 +43,9 @@ class ParkController extends Controller
         if ($response['success']) {
             return response()->json([
                 'success' => true,
+                'manual_parkno' => $response['manual_parkno'],
                 'position' => $response['parked']->position,
-                'level' => $response['level']->label
+                'level' => $response['manual_parkno'] ? null : $response['level']->label
             ]);
         } else {
             return response()->json([
@@ -75,7 +76,7 @@ class ParkController extends Controller
         if (!$parking) {
             return response()->json([
                 'success' => false,
-                'message' => 'Please check with support'
+                'message' => 'Try again, QR Code expired.'
             ], 403);
         }
 
@@ -89,10 +90,14 @@ class ParkController extends Controller
                 'hours' => $response['hours'],
             ]);
         } else {
-            return response()->json([
+            $error = [
                 'success' => false,
                 'message' => $response['message']
-            ]);
+            ];
+            if (isset($response['charge_log'])) {
+                $error['charge_log'] = $response['charge_log'];
+            }
+            return response()->json($error);
         }
     }
 }
